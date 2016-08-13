@@ -1,1 +1,1 @@
-a ver que sale
+Proyecto en python para kali linux.
