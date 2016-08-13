@@ -3,4 +3,4 @@
 import socket
 
 ip = socket.gethostbyname(socket.gethostname())
-sys.stdout.write(ip);
+print ip;
