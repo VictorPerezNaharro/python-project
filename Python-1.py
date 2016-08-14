@@ -41,7 +41,7 @@ APK = createAPK()
 print "Generando APK..."
 ipl = APK.create(args.app_name, args.lp)
 print "Iniciando postgresql..."
-APK.launchProcess("gnome-terminal -e 'bash -c \"service postgresql start; exec bash\"'")
+APK.launchProcess("service postgresql start")
 print "Iniciando msfconsole en nueva ventana..."
 APK.launchProcess("gnome-terminal -e 'bash -c \"msfconsole; exec bash\"'")
 print "--usa esta guia--"
