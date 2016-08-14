@@ -2,6 +2,14 @@ import socket
 import argparse
 from subprocess import Popen, PIPE, STDOUT
 
+class prepareHandler:
+    def __init__(self):
+        import subprocess    
+            cmd_line = "echo Hello!"
+            p = subprocess.Popen(cmd_line, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+            out = p.communicate()[0]
+            print out
+
 class createAPK:
     def get_ip_address(self):
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -23,6 +31,7 @@ class createAPK:
         
         self.launchProcess(com)
         
+##PARSER SHIT
 parser = argparse.ArgumentParser(description='Testing')
         #parser.add_argument('ip_remota', metavar='ipr', type=str, nargs='+',
                             #help='ip remota')
@@ -31,6 +40,9 @@ parser.add_argument('app_name', metavar='name', type=str, nargs='+',
 parser.add_argument('lp', metavar='lp', type=str, nargs='+',
                     help='local port')
 args = parser.parse_args()
-        
+##//PARSER SHIT---------
+
+Handler = prepareHandler()
+
 APK = createAPK()
 APK.create(args.app_name, args.lp)
