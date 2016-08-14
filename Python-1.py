@@ -1,8 +1,5 @@
 import socket
-import subprocess
-import tempfile
-import os
-
+from subprocess import Popen, PIPE, STDOUT
 
 def get_ip_address():
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -11,7 +8,7 @@ def get_ip_address():
 
 ip = get_ip_address()
 
-p = subprocess.Popen(['ls', '-a'], stdout=subprocess.PIPE, 
-                                 stderr=subprocess.PIPE)
-out, err = p.communicate()
-print out
+p = Popen('echo hola', stdout = PIPE, 
+        stderr = STDOUT, shell = True)
+for line in p.stdout:
+    print line.replace('\n', '')
