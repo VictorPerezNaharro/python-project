@@ -5,10 +5,10 @@ from subprocess import Popen, PIPE, STDOUT
 class prepareHandler:
     def __init__(self):
         import subprocess    
-            cmd_line = "echo Hello!"
-            p = subprocess.Popen(cmd_line, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-            out = p.communicate()[0]
-            print out
+        cmd_line = "echo Hello!"
+        p = subprocess.Popen(cmd_line, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        out = p.communicate()[0]
+        print out
 
 class createAPK:
     def get_ip_address(self):
