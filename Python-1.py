@@ -1,14 +1,7 @@
 import socket
+import os
 import argparse
 from subprocess import Popen, PIPE, STDOUT
-
-class prepareHandler:
-    def __init__(self):
-        import subprocess    
-        cmd_line = "echo Hello!"
-        p = subprocess.Popen(cmd_line, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-        out = p.communicate()[0]
-        print out
 
 class createAPK:
     def get_ip_address(self):
@@ -42,7 +35,8 @@ parser.add_argument('lp', metavar='lp', type=str, nargs='+',
 args = parser.parse_args()
 ##//PARSER SHIT---------
 
-Handler = prepareHandler()
-
 APK = createAPK()
 APK.create(args.app_name, args.lp)
+APK.launchProcess("gnome-terminal -e 'bash -c \"msfconsole; exec bash\"'")
+
+raw_input("Press Enter to continue...")
