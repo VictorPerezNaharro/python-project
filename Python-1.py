@@ -15,7 +15,7 @@ class createAPK:
             print line.replace('\n', '')
         return 0
     
-    def run(self, app_name, lp):
+    def create(self, app_name, lp):
         
         ipl = self.get_ip_address()
         print ipl
@@ -32,5 +32,5 @@ parser.add_argument('lp', metavar='lp', type=str, nargs='+',
                     help='local port')
 args = parser.parse_args()
         
-T = test()
-T.run(args.app_name, args.lp)
+APK = createAPK()
+APK.create(args.app_name, args.lp)
