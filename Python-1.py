@@ -42,7 +42,7 @@ args = parser.parse_args()
 ##//PARSER SHIT---------
 print "lp: " + args.lp[0] + "app_name: " + args.app_name[0] + " ipr: " + args.ipr[0]
 print "Iniciando postgresql..."
-APK = new createAPK
+APK = createAPK()
 APK.launchProcess("service postgresql start")
 print "Iniciando msfconsole en nueva ventana..."
 APK.launchProcess("gnome-terminal -e 'bash -c \"msfconsole; exec bash\"'")
