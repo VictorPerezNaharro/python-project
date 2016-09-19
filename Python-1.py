@@ -10,6 +10,7 @@ def MACsnag(IP):
     ans, unans = arping(IP)
     for s, r in ans:
         return r[Ether].src
+
 		
 def Spoof(routerIP, victimIP):
     victimMAC = MACsnag(victimIP)
